@@ -12,10 +12,14 @@ singleton a = \e -> (a == e)
 union :: Set a -> Set a -> Set a
 union a b = \e -> a e || b e
 
-data Point = Point { x:: Int, y::Int } deriving (Eq)
+data Point = Point { x:: Int, y::Int } deriving (Eq, Show)
+
 type MineSet = Set Point
 
 data WorldRectangle = WorldRectangle { x1:: Int, y1:: Int, x2:: Int, y2:: Int } deriving (Show)
+
+instance Show MineSet where
+	show set = "set" -- how to effectively print content of a functional set? 
 
 type TileSet = Point -> Int
 addTile :: TileSet -> Point -> Int -> TileSet

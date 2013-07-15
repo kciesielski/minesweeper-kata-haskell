@@ -17,6 +17,7 @@ library
   ghc-options: -Wall  
   default-language: Haskell2010
   exposed-modules: Minesweeper.Core
+  default-extensions:      TypeSynonymInstances, FlexibleInstances
 
 executable haskell-minesweeper
   hs-source-dirs:  src
@@ -37,4 +38,4 @@ test-suite minesweeper-tests
                    test-framework >= 0.4.1,
                    test-framework-quickcheck2,
                    test-framework-hunit
-  ghc-options:     -Wall -rtsopts                   
+  default-extensions:      TypeSynonymInstances, FlexibleInstances
