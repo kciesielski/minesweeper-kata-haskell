@@ -25,6 +25,12 @@ prop_union_contains_from_B :: Point -> MineSet -> MineSet -> Property
 prop_union_contains_from_B point setA setB = 
 	contains setB point ==> 
 		contains (union setA setB) point == True
+prop_point_up_down :: Point -> Bool
+prop_point_up_down point = 
+  moveDown (moveUp point) == point
+prop_point_downleft_upright :: Point -> Bool
+prop_point_downleft_upright point =
+  moveLeftDown (moveRightUp point) == point
 
 instance Arbitrary Point where 
   arbitrary = do
@@ -43,6 +49,8 @@ tests = [
                 testProperty "empty set"			prop_empty,
                 testProperty "set union with empty set gives the same set" prop_union_with_empty,
                 testProperty "union contains point from its 1st coponent" prop_union_contains_from_A,
-                testProperty "union contains point from its 2nd coponent" prop_union_contains_from_B
+                testProperty "union contains point from its 2nd coponent" prop_union_contains_from_B,
+                testProperty "move up and down returns to same point" prop_point_up_down,
+                testProperty "move down-left and up-right returns to same point" prop_point_downleft_upright
                 ]
        ]
