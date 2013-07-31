@@ -37,5 +37,6 @@ test-suite minesweeper-tests
                    QuickCheck >= 2.4,
                    test-framework >= 0.4.1,
                    test-framework-quickcheck2,
-                   test-framework-hunit
+                   test-framework-hunit,
+                   split
   default-extensions:      TypeSynonymInstances, FlexibleInstances
