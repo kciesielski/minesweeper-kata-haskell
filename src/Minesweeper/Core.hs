@@ -60,4 +60,4 @@ moveRightDown point = moveRight (moveDown point)
 moveLeftUp point = moveLeft (moveUp point)
 
 stringToListOfListsOfChars :: String -> [[Char]]
-stringToListOfListsOfChars text = map read (splitOn "\n" text)
+stringToListOfListsOfChars text = splitOn "\n" text

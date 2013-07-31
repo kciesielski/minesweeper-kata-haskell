@@ -4,8 +4,12 @@ import Minesweeper.Core
 import Test.QuickCheck
 import Test.QuickCheck()
 import Test.HUnit()
+import Test.HUnit
+import Test.Utils
 import Test.Framework as TF (defaultMain, testGroup, Test)
 import Test.Framework.Providers.HUnit()
+import Test.Framework.Providers.HUnit
+
 import Test.Framework.Providers.QuickCheck2 (testProperty)
 
 main :: IO ()
@@ -41,10 +45,19 @@ instance Arbitrary Point where
 instance CoArbitrary Point where
 	coarbitrary p = variant 1 -- I have no idea what this stuff will produce ....
 
+testStringToListOfListsOfChars :: (String, [[Char]]) -> Assertion
+testStringToListOfListsOfChars (input, expectedOutput) = expectedOutput @=? stringToListOfListsOfChars input
+
+dataStringToListOfListsOfChars :: [(String, [[Char]])]
+
+dataStringToListOfListsOfChars = [
+  ("test\ntest2", [['t','e','s','t'], ['t','e','s','t','2']]),
+  ("test", [['t','e','s','t']])]
 
 tests :: [TF.Test]
 tests = [
         testGroup "QuickCheck Minesweeper" [
+                testWithProvider "Foo" testStringToListOfListsOfChars dataStringToListOfListsOfChars,
                 testProperty "add To Set"           prop_add,
                 testProperty "empty set"			prop_empty,
                 testProperty "set union with empty set gives the same set" prop_union_with_empty,
@@ -52,5 +65,6 @@ tests = [
                 testProperty "union contains point from its 2nd coponent" prop_union_contains_from_B,
                 testProperty "move up and down returns to same point" prop_point_up_down,
                 testProperty "move down-left and up-right returns to same point" prop_point_downleft_upright
+
                 ]
        ]
