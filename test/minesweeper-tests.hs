@@ -45,6 +45,7 @@ instance Arbitrary Point where
 instance CoArbitrary Point where
 	coarbitrary p = variant 1 -- I have no idea what this stuff will produce ....
 
+--
 testStringToListOfListsOfChars :: (String, [[Char]]) -> Assertion
 testStringToListOfListsOfChars (input, expectedOutput) = expectedOutput @=? stringToListOfListsOfChars input
 
@@ -53,11 +54,34 @@ dataStringToListOfListsOfChars :: [(String, [[Char]])]
 dataStringToListOfListsOfChars = [
   ("test\ntest2", [['t','e','s','t'], ['t','e','s','t','2']]),
   ("test", [['t','e','s','t']])]
+--
+testBuildMineSetOfCharArrayShouldContainMines :: ([[Char]], Point) -> Assertion
+testBuildMineSetOfCharArrayShouldContainMines (charArray, point) =  buildMineSetOfCharArray charArray point @=? True
+
+dataCharArraysWithMinesets :: [([[Char]], Point)]
+dataCharArraysWithMinesets = [
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 2, y = 0}),
+  ([['*','.','*'],['.','.','.'],['.','.','.']], Point { x = 2, y = 0}),
+  ([['*','.','*'],['.','.','.'],['.','.','.']], Point { x = 0, y = 0}),
+  ([['*','.','*'],['.','.','.'],['.','*','.']], Point { x = 1, y = 2})]
+--
+testBuildMineSetOfCharArrayShouldNotContainMines :: ([[Char]], Point) -> Assertion
+testBuildMineSetOfCharArrayShouldNotContainMines (charArray, point) =  buildMineSetOfCharArray charArray point @=? False
+
+dataCharArraysWithNotMinesets :: [([[Char]], Point)]
+dataCharArraysWithNotMinesets = [
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = -1, y = 0}),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 0, y = -1}),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 1, y = 4}),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 4, y = 1}),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 1, y = 1})]
 
 tests :: [TF.Test]
 tests = [
         testGroup "QuickCheck Minesweeper" [
-                testWithProvider "Foo" testStringToListOfListsOfChars dataStringToListOfListsOfChars,
+                testWithProvider "string to list of lists" testStringToListOfListsOfChars dataStringToListOfListsOfChars,
+                testWithProvider "built mine set contains expected points" testBuildMineSetOfCharArrayShouldContainMines dataCharArraysWithMinesets,
+                testWithProvider "built mine set does not contain expected points" testBuildMineSetOfCharArrayShouldNotContainMines dataCharArraysWithNotMinesets,
                 testProperty "add To Set"           prop_add,
                 testProperty "empty set"			prop_empty,
                 testProperty "set union with empty set gives the same set" prop_union_with_empty,

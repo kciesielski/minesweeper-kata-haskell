@@ -61,3 +61,8 @@ moveLeftUp point = moveLeft (moveUp point)
 
 stringToListOfListsOfChars :: String -> [[Char]]
 stringToListOfListsOfChars text = splitOn "\n" text
+buildMineSetOfCharArray :: [[Char]] -> MineSet
+buildMineSetOfCharArray array = \point -> if x point < 0 || y point < 0 then False else 
+	if length array <= y point then False else 
+		if length (array !! (y point)) <= x point then False else 
+			(array !! (y point)) !! (x point) == '*'
