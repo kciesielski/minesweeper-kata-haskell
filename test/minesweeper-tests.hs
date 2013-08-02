@@ -75,13 +75,25 @@ dataCharArraysWithNotMinesets = [
   ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 1, y = 4}),
   ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 4, y = 1}),
   ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 1, y = 1})]
+--
+hintShouldReturnSumOfNeighborMines :: ([[Char]], Point, Char) -> Assertion
+hintShouldReturnSumOfNeighborMines (charArray, point, expectedNumber) = hint (buildMineSetOfCharArray charArray) point @=? expectedNumber
 
+dataHintShouldReturnSumOfNeighborMines :: [([[Char]], Point, Char)]
+dataHintShouldReturnSumOfNeighborMines = [
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 0, y = 0}, '0'),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 0, y = 1}, '0'),
+  ([['.','.','*'],['.','.','.'],['.','.','.']], Point { x = 1, y = 0}, '1'),
+  ([['.','*','*'],['.','.','.'],['*','*','.']], Point { x = 1, y = 1}, '4'),
+  ([['.','*','*'],['.','.','.'],['*','*','.']], Point { x = 1, y = 0}, '*')]
+--
 tests :: [TF.Test]
 tests = [
         testGroup "QuickCheck Minesweeper" [
                 testWithProvider "string to list of lists" testStringToListOfListsOfChars dataStringToListOfListsOfChars,
                 testWithProvider "built mine set contains expected points" testBuildMineSetOfCharArrayShouldContainMines dataCharArraysWithMinesets,
                 testWithProvider "built mine set does not contain expected points" testBuildMineSetOfCharArrayShouldNotContainMines dataCharArraysWithNotMinesets,
+                testWithProvider "hint return correct number of neighbors" hintShouldReturnSumOfNeighborMines dataHintShouldReturnSumOfNeighborMines,
                 testProperty "add To Set"           prop_add,
                 testProperty "empty set"			prop_empty,
                 testProperty "set union with empty set gives the same set" prop_union_with_empty,

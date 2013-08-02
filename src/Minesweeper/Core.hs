@@ -1,5 +1,6 @@
 module Minesweeper.Core where	
 import Data.List.Split
+import Data.Char
 
 type Set a = a -> Bool
 newEmpty :: Set a
@@ -58,6 +59,8 @@ moveRightUp point = moveRight (moveUp point)
 moveLeftDown point = moveLeft (moveDown point)
 moveRightDown point = moveRight (moveDown point)
 moveLeftUp point = moveLeft (moveUp point)
+moves :: [Move]
+moves = [moveUp, moveDown, moveLeft, moveRight, moveRightUp, moveRightDown, moveLeftUp, moveLeftDown]
 
 stringToListOfListsOfChars :: String -> [[Char]]
 stringToListOfListsOfChars text = splitOn "\n" text
@@ -66,3 +69,9 @@ buildMineSetOfCharArray array = \point -> if x point < 0 || y point < 0 then Fal
 	if length array <= y point then False else 
 		if length (array !! (y point)) <= x point then False else 
 			(array !! (y point)) !! (x point) == '*'
+
+foldingFun :: MineSet -> Point -> Int -> Move -> Int
+foldingFun mines point total = \move -> if mines (move point) then total + 1 else total
+
+hint :: MineSet -> Point -> Char
+hint mineset = \point -> if mineset point then '*' else intToDigit (foldl (foldingFun mineset point) 0 moves)
